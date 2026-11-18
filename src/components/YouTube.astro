@@ -1,0 +1,23 @@
+---
+/** Vídeo do YouTube que só carrega o player (youtube-nocookie) depois do clique: sem cookies até a pessoa decidir assistir. */
+interface Props { id: string; title: string; vertical?: boolean; }
+const { id, title } = Astro.props;
+---
+<div class="frame" data-yt={id}>
+  <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" width="480" height="360" />
+  <button class="play" type="button" aria-label={`▶ ${title}`}><span aria-hidden="true">▶</span></button>
+</div>
+<script is:inline>
+  document.querySelectorAll('[data-yt] .play').forEach((btn) => {
+    if (btn.dataset.bound) return; btn.dataset.bound = '1';
+    btn.addEventListener('click', () => {
+      const box = btn.closest('[data-yt]');
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.yt}?autoplay=1&rel=0`;
+      f.title = btn.getAttribute('aria-label').replace(/^▶ /, '');
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+    });
+  });
+</script>

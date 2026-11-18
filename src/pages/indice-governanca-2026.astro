@@ -1,0 +1,45 @@
+---
+/** Landing do Índice de Governança das Propostas Presidenciais 2026 (endereço permanente do v1). Só em PT: a troca de língua leva às páginas de pesquisa (corrige os 404 do v1). */
+import Base from '../layouts/Base.astro';
+import { withBase, localePath } from '../data/paths';
+const APP_URL = 'https://planosgov2026.online/';
+const REPORT_URL = 'https://drive.google.com/file/d/149Q8440qbRi2VDdT1EoLm106_Cf7bzFW/view?usp=sharing';
+const path = withBase('indice-governanca-2026/');
+---
+<Base lang="pt" title="Propostas que podem ser cobradas | Eduardo Alencar" description="Uma leitura de governança dos programas presidenciais registrados no TSE em 2026." room="research/" canonicalPath={path} hreflang={false}
+  alternates={{ pt: path, en: localePath('en', 'research/#ferramentas'), es: localePath('es'), it: localePath('it') }}>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Estudo analítico independente · Agosto de 2026</p>
+      <h1 class="page-title">Propostas que podem ser cobradas</h1>
+      <p class="lede"><em>Uma leitura de governança dos programas presidenciais registrados no TSE em 2026.</em></p>
+      <p class="lede">Planos de governo costumam ser lidos como catálogos de preferências. Este estudo pergunta outra coisa: a proposta permite que a sociedade cobre execução, aprenda com falhas e corrija rumos?</p>
+      <div class="actions"><a class="btn" href={APP_URL}>Abrir o Índice ↗</a><a class="btn ghost" href={REPORT_URL}>Ler o relatório executivo ↗</a></div>
+    </header>
+    <section><p class="bio-box"><strong>Mede o documento, não a pessoa candidata.</strong> Não é ranking eleitoral e não prevê desempenho de governo: é uma leitura de governança do texto protocolado no TSE.</p></section>
+    <section>
+      <ul class="numbers">
+        <li><strong>13</strong><span>documentos oficiais analisados</span></li>
+        <li><strong>12</strong><span>perfis de propostas</span></li>
+        <li><strong>10</strong><span>clusters comparáveis</span></li>
+      </ul>
+    </section>
+    <section>
+      <h2>O que o índice mede</h2>
+      <p class="prose">Uma promessa se torna governável quando percorre uma cadeia inteira. O estudo verifica se o documento fecha cada elo, e o último é justamente o que quase sempre falta.</p>
+      <p class="meta">Problema → Instrumento → Responsável → Recurso → Métrica → <strong>Consequência</strong></p>
+    </section>
+    <section>
+      <h2>Três coisas que a leitura mostrou</h2>
+      <div class="doors">
+        <div class="card"><h3>Detalhe não é sinônimo de governança</h3><p>Planos longos podem faltar responsável, custo ou mecanismo de correção; planos curtos podem tê-los. Por isso a comparação não usa número de páginas como atalho.</p></div>
+        <div class="card"><h3>A lacuna recorrente é a passagem da intenção à consequência</h3><p>Diagnóstico e valor público aparecem mais que custo, linha de base, avaliação independente e consequência para desempenho insuficiente.</p></div>
+        <div class="card"><h3>Programa político e programa de governo não são a mesma peça</h3><p>Plataformas de luta ou de transformação social são uma escolha legítima, mas limitam o que pode ser avaliado sob a pergunta deste estudo.</p></div>
+      </div>
+    </section>
+    <section>
+      <blockquote class="subtitle" style="margin:0;padding-left:22px;border-left:3px solid var(--accent)">Promessa pública não se torna governável porque é desejável. Torna-se governável quando deixa claro problema, instrumento, responsável, recurso, métrica e consequência.</blockquote>
+      <p class="muted small" style="margin-top:24px">Eduardo Carvalho Nepomuceno Alencar, análise independente · Avaliação de propostas, não de candidatos.</p>
+    </section>
+  </div>
+</Base>

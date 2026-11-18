@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import { home } from '../../data/content';
+import { fullLocales, type FullLocale } from '../../data/site';
+import { localePath, withBase } from '../../data/paths';
+import { em } from '../../data/text';
+import feed from '../../data/feed.json';
+export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as FullLocale;
+const c = home[lang];
+const latest = feed.itens.find((item) => item.canal === 'newsletter' && item.idioma === lang && item.url);
+---
+<Base title={c.title} description={c.description} lang={lang} room="">
+  <div class="wrap">
+    <section class="home-hero">
+      <div>
+        <p class="eyebrow">{c.eyebrow}</p>
+        <h1>{c.headline}</h1>
+        <p class="lede" set:html={em(c.lede)} />
+      </div>
+      <img class="portrait" src={withBase('images/eduardo-alencar.jpg')} alt="Eduardo Alencar" width="300" height="300" />
+    </section>
+    <section aria-label={lang === 'pt' ? 'Números' : 'Numbers'}>
+      <ul class="numbers">{c.numbers.map((n) => <li><strong>{n.figure}</strong><span>{n.label}</span></li>)}</ul>
+    </section>
+    <section>
+      <h2>{c.doorsTitle}</h2>
+      <div class="doors">
+        {c.doors.map((d) => (
+          <a class="card" href={localePath(lang, d.path)}>
+            <p class="kicker">{d.kicker}</p><h3>{d.title}</h3><p>{d.text}</p><span class="go">{d.cta}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+    {latest && (
+      <section class="latest" aria-label={c.latest}>
+        <span>{c.latest}</span><a href={latest.url}>{latest.titulo.replace(/^Newsletter:\s*/, '')}</a>
+      </section>
+    )}
+  </div>
+</Base>

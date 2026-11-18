@@ -1,0 +1,117 @@
+---
+import '@fontsource/fraunces/400.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-mono/400.css';
+import '../styles/site.css';
+import { locales, rooms, ui, profiles, substackUrl, email, isFull, type Locale } from '../data/site';
+import { localePath, withBase, absolute } from '../data/paths';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Locale;
+  /** Caminho da sala atual, relativo à língua ('' = início). */
+  room?: string;
+  /** Endereço desta página em cada língua (caminho a partir da raiz). Padrão: mesma sala em PT/EN, página única em ES/IT. */
+  alternates?: Partial<Record<Locale, string>>;
+  /** Caminho canônico, se diferente de /<lang>/<room>. */
+  canonicalPath?: string;
+  image?: string;
+  jsonLd?: Record<string, unknown>[];
+  showSubscribe?: boolean;
+  /** false quando os destinos da troca de língua não são traduções desta página. */
+  hreflang?: boolean;
+}
+const { title, description, lang, room = '', canonicalPath, image = 'images/eduardo-alencar.jpg', jsonLd = [], showSubscribe = true, hreflang = true } = Astro.props;
+const t = ui[lang];
+const preview = import.meta.env.PUBLIC_PREVIEW === 'true';
+const goat = import.meta.env.PUBLIC_GOATCOUNTER;
+
+const defaultAlternates: Partial<Record<Locale, string>> = {
+  pt: localePath('pt', room), en: localePath('en', room), es: localePath('es'), it: localePath('it')
+};
+const alternates = Astro.props.alternates ?? defaultAlternates;
+const canonical = absolute(canonicalPath ?? localePath(lang, room));
+const navLang = isFull(lang) ? lang : null;
+const navItems = navLang ? rooms.map((path, i) => ({ path, label: ui[navLang].nav[i] })) : [];
+
+const person = {
+  '@context': 'https://schema.org', '@type': 'Person', '@id': absolute(withBase('#person')),
+  name: 'Eduardo Alencar', alternateName: 'Eduardo Carvalho Nepomuceno Alencar',
+  url: absolute(withBase('')), image: absolute(withBase('images/eduardo-alencar.jpg')),
+  jobTitle: lang === 'pt' ? 'Assessor Legislativo Sênior' : 'Senior Legislative Advisor',
+  worksFor: { '@type': 'GovernmentOrganization', name: 'Câmara dos Deputados' },
+  alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'University of California, Irvine' }, { '@type': 'CollegeOrUniversity', name: 'Universidade de Brasília' }],
+  knowsAbout: ['public integrity', 'anti-corruption', 'parliamentary oversight', 'public procurement fraud', 'evidence-based policy', 'AI in government'],
+  sameAs: profiles.map((p) => p.href)
+};
+const site = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Eduardo Alencar', url: absolute(withBase('')), inLanguage: ['pt-BR', 'en'], publisher: { '@id': person['@id'] } };
+const graph = [person, ...(room === '' ? [site] : []), ...jsonLd];
+---
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {preview && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    {hreflang && Object.entries(alternates).map(([code, path]) => <link rel="alternate" hreflang={code} href={absolute(String(path))} />)}
+    {hreflang && alternates.pt && <link rel="alternate" hreflang="x-default" href={absolute(alternates.pt)} />}
+    <link rel="alternate" type="application/rss+xml" title="Eduardo Alencar" href={withBase('rss.xml')} />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#155f5a" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absolute(withBase(image))} />
+    <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json" set:html={JSON.stringify(graph.length === 1 ? graph[0] : graph)} />
+    {goat && <script is:inline data-goatcounter={`https://${goat}.goatcounter.com/count`} async src="https://gc.zgo.at/count.js"></script>}
+  </head>
+  <body>
+    <a class="skip" href="#conteudo">{t.skip}</a>
+    {preview && <div class="preview-bar" role="note">{t.preview}</div>}
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href={localePath(lang)}><strong>Eduardo Alencar</strong><span>{t.tagline}</span></a>
+        {navItems.length > 0 && (
+          <nav class="nav" id="nav" aria-label={t.navLabel}>
+            {navItems.map((item) => <a href={localePath(lang, item.path)} aria-current={room === item.path ? 'page' : undefined}>{item.label}</a>)}
+          </nav>
+        )}
+        <div class="header-tools">
+          <div class="langs" role="group" aria-label={t.language}>
+            {locales.map((code) => alternates[code] && <a href={alternates[code]} hreflang={code} lang={code} aria-current={code === lang ? 'true' : undefined}>{code.toUpperCase()}</a>)}
+          </div>
+          <a class="btn small" href={substackUrl} data-goatcounter-click="assinar-topo">{t.subscribeShort}</a>
+          {navItems.length > 0 && <button class="menu-btn" type="button" aria-controls="nav" aria-expanded="false">{t.menu}</button>}
+        </div>
+      </div>
+    </header>
+    <main id="conteudo"><slot /></main>
+    {showSubscribe && (
+      <aside class="subscribe-band" aria-label={t.subscribe}>
+        <div class="wrap">
+          <p>{t.footerPitch}</p>
+          <a class="btn" href={substackUrl} data-goatcounter-click="assinar-rodape">{t.subscribe}</a>
+        </div>
+      </aside>
+    )}
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>© {new Date().getFullYear()} Eduardo Alencar · {t.location}</span>
+        <span class="contact-links">{profiles.map((p) => <a href={p.href} rel="me">{p.label}</a>)}<a href={`mailto:${email}`}>E-mail</a></span>
+      </div>
+    </footer>
+    <script is:inline>
+      (() => {
+        const btn = document.querySelector('.menu-btn'); const nav = document.getElementById('nav');
+        btn?.addEventListener('click', () => { const open = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); });
+      })();
+    </script>
+  </body>
+</html>

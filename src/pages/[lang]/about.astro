@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+import { about as copy } from '../../data/content';
+import { fullLocales, profiles, email, substackUrl, ui, type FullLocale } from '../../data/site';
+import { withBase } from '../../data/paths';
+export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as FullLocale;
+const c = copy[lang];
+const subject = encodeURIComponent(lang === 'pt' ? 'Convite' : 'Invitation');
+---
+<Base title={c.title} description={c.description} lang={lang} room="about/" jsonLd={[{ '@context': 'https://schema.org', '@type': 'ProfilePage', mainEntity: { '@id': new URL(withBase('#person'), import.meta.env.SITE).href } }]}>
+  <div class="wrap">
+    <header class="hero about-head">
+      <div>
+        <p class="eyebrow">{c.eyebrow}</p>
+        <h1 class="page-title">{c.heading}</h1>
+        <div class="prose">{c.paragraphs.map((p) => <p>{p}</p>)}</div>
+        <p class="muted small">{c.location}</p>
+      </div>
+      <img class="portrait" src={withBase('images/eduardo-alencar.jpg')} alt="Eduardo Alencar" width="300" height="300" />
+    </header>
+
+    <section id="bio">
+      <h2>{c.bioTitle}</h2>
+      <div class="bio-box">
+        <p id="bio-text">{c.bio}</p>
+        <div class="actions" style="margin-top:0">
+          <button class="btn small" type="button" id="copy-bio" data-done={c.copied}>{c.copy}</button>
+          <a class="btn ghost small" href={withBase('images/eduardo-alencar.jpg')} download>{c.photo}</a>
+        </div>
+        <p class="muted small" style="margin:12px 0 0">{c.bioHint}</p>
+      </div>
+    </section>
+
+    <section id="teaching">
+      <h2>{c.teachingTitle}</h2>
+      <ul class="list">{c.teaching.map(([h, p]) => <li><strong>{h}</strong><span class="muted">{p}</span></li>)}</ul>
+    </section>
+
+    <section id="cv">
+      <h2>{c.cvTitle}</h2>
+      <ul class="list">{c.cvItems.map((i) => <li>{i}</li>)}</ul>
+      <div class="actions"><a class="btn ghost" href={withBase(`downloads/cv-eduardo-alencar-${lang}.pdf`)}>{c.cvCta}</a></div>
+    </section>
+
+    <section id="contact" class="two-col">
+      <div>
+        <h2>{c.inviteTitle}</h2>
+        <p>{c.inviteText}</p>
+        <div class="actions"><a class="btn" href={`mailto:${email}?subject=${subject}`}>{c.inviteCta}</a></div>
+      </div>
+      <div>
+        <h2>{c.listTitle}</h2>
+        <p>{c.listText}</p>
+        <div class="actions"><a class="btn ghost" href={substackUrl}>{ui[lang].subscribe}</a></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>{c.contactTitle}</h2>
+      <p class="contact-links"><a href={`mailto:${email}`}>{email}</a>{profiles.map((p) => <a href={p.href} rel="me">{p.label}</a>)}</p>
+    </section>
+  </div>
+  <script is:inline>
+    document.getElementById('copy-bio')?.addEventListener('click', async (e) => {
+      const btn = e.currentTarget; const text = document.getElementById('bio-text').textContent;
+      try { await navigator.clipboard.writeText(text); btn.textContent = btn.dataset.done; } catch { const r = document.createRange(); r.selectNodeContents(document.getElementById('bio-text')); getSelection().removeAllRanges(); getSelection().addRange(r); }
+    });
+  </script>
+</Base>

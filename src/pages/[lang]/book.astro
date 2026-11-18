@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import { book as copy, chapters, pressUrl } from '../../data/content';
+import { episodes } from '../../data/videos';
+import { fullLocales, bookUrl, type FullLocale } from '../../data/site';
+import { localePath, withBase, absolute } from '../../data/paths';
+export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as FullLocale;
+const c = copy[lang];
+const episodeFor = (n: number) => episodes.find((e) => e.chapter === n);
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'Book', name: 'Governança em Tempo Real: como o Brasil pode parar de fingir que governa',
+  author: { '@id': absolute(withBase('#person')) }, publisher: { '@type': 'Organization', name: 'Editora JusPodivm' },
+  isbn: '9788544279151', inLanguage: 'pt-BR', datePublished: '2026', url: bookUrl,
+  image: absolute(withBase('images/governanca-em-tempo-real-capa.png')),
+  hasPart: chapters.map((ch) => ({ '@type': 'Chapter', position: ch.n, name: ch.pt }))
+}];
+---
+<Base title={c.title} description={c.description} lang={lang} room="book/" image="images/governanca-em-tempo-real-capa.png" jsonLd={jsonLd}>
+  <div class="wrap">
+    <header class="hero book-head">
+      <div>
+        <p class="eyebrow">{c.eyebrow}</p>
+        <h1 class="page-title">{c.heading}</h1>
+        <p class="subtitle">{c.subtitle}</p>
+        <p class="lede">{c.lede}</p>
+        <p class="meta">{c.meta}</p>
+        <div class="actions"><a class="btn" href={bookUrl} data-goatcounter-click="livro-editora">{c.cta}</a></div>
+      </div>
+      <img class="cover" src={withBase('images/governanca-em-tempo-real-capa.png')} alt={lang === 'pt' ? 'Capa do livro Governança em Tempo Real' : 'Cover of the book Governança em Tempo Real'} width="408" height="596" />
+    </header>
+    <section><p class="lede">{c.body}</p></section>
+    <section>
+      <h2>{c.chaptersTitle}</h2>
+      <p class="muted">{c.chaptersLede}</p>
+      <ol class="chapters">
+        {chapters.map((ch) => {
+          const ep = episodeFor(ch.n);
+          return (
+            <li class="chapter">
+              <span class="n" aria-hidden="true">{ch.n}</span>
+              <div><h3>{c.chapter} {ch.n} · {lang === 'pt' ? ch.pt : ch.en}</h3><p>{lang === 'pt' ? ch.qpt : ch.qen}</p></div>
+              <span class="ep">{ep ? <a href={localePath(lang, `videos/${ep.slug}/`)}>▶ {lang === 'pt' ? 'Episódio' : 'Episode'} {ep.number}</a> : c.episodePending}</span>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+    <section class="launch">
+      <div>
+        <h2>{c.launchTitle}</h2>
+        <p>{c.launch}</p>
+        <h3>{c.pressTitle}</h3>
+        <p><a href={pressUrl}>{c.press}</a></p>
+      </div>
+      <figure>
+        <video controls preload="none" playsinline poster={withBase('videos/lancamento-governanca-em-tempo-real.jpg')} src={withBase('videos/lancamento-governanca-em-tempo-real.mp4')}></video>
+        <figcaption>{c.videoCaption}</figcaption>
+      </figure>
+    </section>
+  </div>
+</Base>

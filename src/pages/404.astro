@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import { localePath } from '../data/paths';
+---
+<Base title="Página não encontrada | Eduardo Alencar" description="Página não encontrada." lang="pt" room="" canonicalPath={localePath('pt')}>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">404</p>
+      <h1 class="page-title">Página não encontrada</h1>
+      <p class="lede">O endereço pode ter mudado. <a href={localePath('pt')}>Voltar ao início</a> · <a href={localePath('en')} lang="en">Back to the home page</a></p>
+    </header>
+  </div>
+</Base>

@@ -1,0 +1,96 @@
+---
+import Base from '../../layouts/Base.astro';
+import { research as copy } from '../../data/content';
+import { works, typeLabel, statusLabel, type WorkItem } from '../../data/catalog';
+import { fullLocales, profiles, type FullLocale } from '../../data/site';
+import { workDestination, withBase } from '../../data/paths';
+export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as FullLocale;
+const c = copy[lang];
+type Group = keyof typeof c.groups;
+const groupOf = (w: WorkItem): Group | null => {
+  if (w.kind === 'profile' || w.kind === 'teaching') return null;
+  if (w.category === 'policy' || w.kind === 'brief') return 'briefs';
+  if (w.category === 'tools' || w.kind === 'tool' || w.kind === 'system') return 'ferramentas';
+  if (/linkedin/i.test(String(w.type))) return 'textos';
+  return 'publicacoes';
+};
+const order: Group[] = ['publicacoes', 'briefs', 'ferramentas', 'textos'];
+const grouped = order.map((g) => ({ id: g, label: c.groups[g], items: works.filter((w) => groupOf(w) === g).sort((a, b) => Number(b.year) - Number(a.year)) })).filter((g) => g.items.length);
+const hasLink = (w: WorkItem) => w.verifiedLinks.length > 0;
+const pdf = (file: string) => withBase(`downloads/${file}`);
+/** Trabalhos fora do catálogo, mantidos com os mesmos endereços de PDF do site v1. */
+const archive = [
+  { title: 'Detecção de fraude em sistemas de registro de preços', href: pdf('anpec-2022-deteccao-fraude-registro-precos.pdf'), meta: { pt: '50º Encontro Nacional de Economia (Anpec), Fortaleza, 2022', en: '50th Brazilian Economics Meeting (Anpec), Fortaleza, 2022 (in Portuguese)' } },
+  { title: 'Caderno Vozes da Classe Média: Classe Média e Emprego Assalariado', href: pdf('caderno-vozes-classe-media-2013.pdf'), meta: { pt: 'Secretaria de Assuntos Estratégicos, 2013', en: 'Secretariat for Strategic Affairs, 2013 (in Portuguese)' } },
+  { title: 'Gestão de pessoas aplicada ao coaching', href: pdf('gestao-pessoas-coaching-sermais-2014.pdf'), meta: { pt: 'Em Coaching e Mentoring: Foco na Excelência. Sermais, 2014', en: 'In Coaching e Mentoring: Foco na Excelência. Sermais, 2014 (in Portuguese)' } },
+  ...[21, 22, 23, 24].map((n) => ({ title: `Política industrial, acompanhamento e análise, nº ${n}`, href: pdf(`ipea-boletim-pi-${n}.pdf`), meta: { pt: 'Instituto de Pesquisa Econômica Aplicada (Ipea), 2003 e 2004', en: 'Institute for Applied Economic Research (Ipea), 2003–2004 (in Portuguese)' } }))
+];
+const scholarly =profiles.filter((p) => ['ORCID', 'Google Scholar'].includes(p.label));
+---
+<Base title={c.title} description={c.description} lang={lang} room="research/">
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="page-title">{c.heading}</h1>
+      <p class="lede">{c.lede}</p>
+    </header>
+    <div class="filters" role="group" aria-label={c.filterLabel}>
+      <button type="button" data-filter="all" aria-pressed="true">{c.all}</button>
+      {grouped.map((g) => <button type="button" data-filter={g.id} aria-pressed="false">{g.label} ({g.items.length})</button>)}
+    </div>
+    {grouped.map((g) => (
+      <section class="group" id={g.id} data-group={g.id}>
+        <h2>{g.label}</h2>
+        <ul class="works">
+          {g.items.map((w) => {
+            const href = workDestination(lang, w);
+            return (
+              <li class="work">
+                <h3>{hasLink(w) ? <a href={href}>{w.title}</a> : w.title}</h3>
+                <span class="tagline">{typeLabel(w, lang)} · {w.year} · {statusLabel(w, lang)}</span>
+                <p>{w.localizedSummary[lang]}</p>
+                {hasLink(w) ? <a class="open" href={href}>{w.verifiedLinks[0].label[lang]} ↗</a> : <span class="open muted">{c.noLink}</span>}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
+    <section class="group" data-group="publicacoes">
+      <h2>{lang === 'pt' ? 'Outros trabalhos' : 'Other work'}</h2>
+      <ul class="works">
+        {archive.map((a) => (
+          <li class="work">
+            <h3>{a.href ? <a href={a.href}>{a.title}</a> : a.title}</h3>
+            <span class="tagline">{a.meta[lang]}</span>
+            {a.href && <a class="open" href={a.href}>PDF ↗</a>}
+          </li>
+        ))}
+      </ul>
+    </section>
+    <section class="group" data-group="publicacoes">
+      <h2>{c.agendaTitle}</h2>
+      <div class="agenda">{c.agenda.map(([h, p]) => <div class="card"><h3>{h}</h3><p>{p}</p></div>)}</div>
+    </section>
+    <section class="group" id="cv">
+      <h2>{c.cvTitle}</h2>
+      <p>{c.cvText}</p>
+      <div class="actions">
+        <a class="btn ghost" href={withBase(`downloads/cv-eduardo-alencar-${lang}.pdf`)}>{c.cvCta}</a>
+        {scholarly.map((p) => <a class="btn ghost" href={p.href}>{p.label}</a>)}
+      </div>
+    </section>
+  </div>
+  <script is:inline>
+    (() => {
+      const buttons = document.querySelectorAll('.filters button');
+      const apply = (f) => {
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === f)));
+        document.querySelectorAll('[data-group]').forEach((s) => { s.hidden = f !== 'all' && s.dataset.group !== f; });
+      };
+      buttons.forEach((b) => b.addEventListener('click', () => { apply(b.dataset.filter); history.replaceState(null, '', b.dataset.filter === 'all' ? location.pathname : `#${b.dataset.filter}`); }));
+      const h = location.hash.slice(1); if ([...buttons].some((b) => b.dataset.filter === h)) apply(h);
+    })();
+  </script>
+</Base>

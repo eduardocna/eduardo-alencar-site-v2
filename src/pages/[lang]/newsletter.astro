@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import { newsletter as copy } from '../../data/content';
+import { fullLocales, substackUrl, substackHome, linkedinNewsletter, ui, type FullLocale } from '../../data/site';
+import { fmtDate } from '../../data/text';
+import feed from '../../data/feed.json';
+export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as FullLocale;
+const c = copy[lang];
+const editions = feed.itens.filter((item) => item.canal === 'newsletter' && item.idioma === lang && item.url).slice(0, 8);
+---
+<Base title={c.title} description={c.description} lang={lang} room="newsletter/" showSubscribe={false}>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="page-title">{c.heading}</h1>
+      <p class="lede">{c.lede}</p>
+      <div class="actions"><a class="btn" href={substackUrl} data-goatcounter-click="assinar-newsletter">{ui[lang].subscribe}</a></div>
+      <p class="muted small">{c.free}</p>
+    </header>
+    <section class="two-col">
+      <div>
+        <h2>{c.getTitle}</h2>
+        <ul class="checks">{c.get.map((g) => <li>{g}</li>)}</ul>
+      </div>
+      <div>
+        <h2>{c.themesTitle}</h2>
+        <ul class="tags">{c.themes.map((t) => <li>{t}</li>)}</ul>
+      </div>
+    </section>
+    {editions.length > 0 && (
+      <section>
+        <h2>{c.recentTitle}</h2>
+        <ol class="editions">
+          {editions.map((e) => <li><time datetime={e.data}>{fmtDate(e.data, lang)}</time><a href={e.url}>{e.titulo.replace(/^Newsletter:\s*/, '')}</a></li>)}
+        </ol>
+        <p class="small"><a href={substackHome}>{c.readAll}</a></p>
+      </section>
+    )}
+    <section class="subscribe-inline">
+      <p>{c.linkedin}</p>
+      <a class="btn ghost small" href={linkedinNewsletter}>{c.linkedinCta}</a>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,59 @@
+---
+import Base from '../../../layouts/Base.astro';
+import YouTube from '../../../components/YouTube.astro';
+import { videos as copy, chapters } from '../../../data/content';
+import { episodes, shorts } from '../../../data/videos';
+import { fullLocales, youtubeChannel, substackUrl, ui, type FullLocale } from '../../../data/site';
+import { localePath } from '../../../data/paths';
+import { fmtDate } from '../../../data/text';
+export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as FullLocale;
+const c = copy[lang];
+const jsonLd = shorts.map((s) => ({
+  '@context': 'https://schema.org', '@type': 'VideoObject', name: s.title, description: s.title, inLanguage: 'pt-BR',
+  uploadDate: s.date, thumbnailUrl: `https://i.ytimg.com/vi/${s.id}/hqdefault.jpg`, embedUrl: `https://www.youtube-nocookie.com/embed/${s.id}`, contentUrl: s.url
+}));
+---
+<Base title={c.title} description={c.description} lang={lang} room="videos/" jsonLd={jsonLd}>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1 class="page-title">{c.heading}</h1>
+      <p class="lede">{c.lede}</p>
+    </header>
+    {episodes.length === 0 ? (
+      <section>
+        <div class="season">
+          <h2>{c.seasonTitle}</h2>
+          <p>{c.seasonText}</p>
+          <div class="actions"><a class="btn" href={substackUrl}>{ui[lang].subscribe}</a></div>
+        </div>
+      </section>
+    ) : (
+      <section>
+        <ul class="list">
+          {episodes.map((e) => (
+            <li><a href={localePath(lang, `videos/${e.slug}/`)}><strong>{e.number}. {e.title[lang]}</strong></a>
+            <span class="muted small">{lang === 'pt' ? 'Capítulo' : 'Chapter'} {e.chapter}: {chapters[e.chapter - 1][lang]} · {fmtDate(e.date, lang)}</span></li>
+          ))}
+        </ul>
+      </section>
+    )}
+    {shorts.length > 0 && (
+      <section>
+        <h2>{c.shortsTitle}</h2>
+        <p class="muted">{c.shortsLede}</p>
+        <ul class="shorts">
+          {shorts.map((s) => (
+            <li class="short">
+              <YouTube id={s.id} title={s.title} />
+              <h3>{s.title}</h3>
+              <time datetime={s.date}>{fmtDate(s.date, lang)}</time>
+            </li>
+          ))}
+        </ul>
+        <div class="actions"><a class="btn ghost" href={youtubeChannel}>{c.channel}</a></div>
+      </section>
+    )}
+  </div>
+</Base>

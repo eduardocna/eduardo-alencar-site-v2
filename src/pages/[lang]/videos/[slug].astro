@@ -1,0 +1,36 @@
+---
+/** Página de episódio: vídeo, resumo, transcrição (PT) e fontes. Gerada só para episódios publicados. */
+import Base from '../../../layouts/Base.astro';
+import { videos as copy, chapters } from '../../../data/content';
+import { episodes, type Episode } from '../../../data/videos';
+import { fullLocales, substackUrl, type FullLocale } from '../../../data/site';
+import { localePath } from '../../../data/paths';
+import { fmtDate } from '../../../data/text';
+export function getStaticPaths() {
+  return fullLocales.flatMap((lang) => episodes.map((episode) => ({ params: { lang, slug: episode.slug }, props: { episode } })));
+}
+interface Props { episode: Episode }
+const { episode } = Astro.props;
+const lang = Astro.params.lang as FullLocale;
+const c = copy[lang];
+const room = `videos/${episode.slug}/`;
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'VideoObject', name: episode.title[lang], description: episode.summary[lang], inLanguage: 'pt-BR',
+  uploadDate: episode.date, thumbnailUrl: `https://i.ytimg.com/vi/${episode.youtubeId}/hqdefault.jpg`,
+  embedUrl: `https://www.youtube-nocookie.com/embed/${episode.youtubeId}`, contentUrl: `https://www.youtube.com/watch?v=${episode.youtubeId}`
+}];
+---
+<Base title={`${episode.title[lang]} | Eduardo Alencar`} description={episode.summary[lang]} lang={lang} room={room} jsonLd={jsonLd}>
+  <article class="wrap">
+    <header class="hero">
+      <p class="eyebrow"><a href={localePath(lang, 'videos/')}>{c.eyebrow}</a> · {lang === 'pt' ? 'Capítulo' : 'Chapter'} {episode.chapter}: {chapters[episode.chapter - 1][lang]}</p>
+      <h1 class="page-title">{episode.title[lang]}</h1>
+      <p class="meta"><time datetime={episode.date}>{fmtDate(episode.date, lang)}</time></p>
+    </header>
+    <div class="episode-video"><iframe src={`https://www.youtube-nocookie.com/embed/${episode.youtubeId}?rel=0`} title={episode.title[lang]} loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+    <section><h2>{c.summary}</h2><p class="prose">{episode.summary[lang]}</p></section>
+    <section class="subscribe-inline"><p>{c.material}</p><a class="btn" href={substackUrl}>{lang === 'pt' ? 'Assinar' : 'Subscribe'}</a></section>
+    {episode.transcript && <section><h2>{c.transcript}</h2><details><summary>{c.transcript}</summary><div class="prose" lang="pt-BR">{episode.transcript.split('\n\n').map((p) => <p>{p}</p>)}</div></details></section>}
+    {episode.sources.length > 0 && <section><h2>{c.sources}</h2><ul>{episode.sources.map((s) => <li><a href={s.href}>{s.label}</a></li>)}</ul></section>}
+  </article>
+</Base>
