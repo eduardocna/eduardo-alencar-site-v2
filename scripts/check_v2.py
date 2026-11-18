@@ -83,5 +83,15 @@ print(f'8. Menção a preço/contratação: {money or "nenhuma"}')
 if money: fails.append('menção comercial')
 for extra in ('llms.txt', 'robots.txt', 'sitemap.xml', 'rss.xml'):
     print(f'9. {extra}:', 'ok' if (dist / extra).exists() else 'AUSENTE')
+# 10. Números de destaque conferidos na fonte primária (fontes-numeros.json)
+vault = Path(__file__).resolve().parents[4]
+fontes = json.loads((Path(__file__).resolve().parents[1] / 'fontes-numeros.json').read_text())
+for n in fontes['numeros']:
+    fonte = vault / n['fonte']
+    ok_fonte = fonte.exists() and n['trecho'] in fonte.read_text(errors='ignore')
+    ok_site = n['numero'] in (dist / n['pagina']).read_text()
+    print(f"10. {n['numero']}: fonte {'ok' if ok_fonte else 'NÃO CONFERE'}, site {'ok' if ok_site else 'AUSENTE'}")
+    if not (ok_fonte and ok_site): fails.append(f"número {n['numero']} sem lastro na fonte ou ausente do site")
+
 print('\nRESULTADO:', 'APROVADO' if not fails else 'REPROVADO: ' + '; '.join(fails))
 sys.exit(1 if fails else 0)
