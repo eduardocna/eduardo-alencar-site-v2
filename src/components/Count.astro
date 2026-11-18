@@ -1,0 +1,8 @@
+---
+/** Número que conta até o valor. O texto final já vai no HTML (leitores de tela, buscadores e quem não tem JS veem o valor certo). */
+interface Props { figure: string }
+const { figure } = Astro.props;
+const value = Number(figure.replace(/[^\d]/g, ''));
+const suffix = figure.replace(/[\d.,\s]/g, '');
+---
+<strong data-count={value} data-suffix={suffix} aria-label={figure}>{figure}</strong>

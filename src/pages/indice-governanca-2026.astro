@@ -2,6 +2,7 @@
 /** Landing do Índice de Governança das Propostas Presidenciais 2026 (endereço permanente do v1). Só em PT: a troca de língua leva às páginas de pesquisa (corrige os 404 do v1). */
 import Base from '../layouts/Base.astro';
 import { withBase, localePath } from '../data/paths';
+import Count from '../components/Count.astro';
 const APP_URL = 'https://planosgov2026.online/';
 const REPORT_URL = 'https://drive.google.com/file/d/149Q8440qbRi2VDdT1EoLm106_Cf7bzFW/view?usp=sharing';
 const path = withBase('indice-governanca-2026/');
@@ -19,9 +20,9 @@ const path = withBase('indice-governanca-2026/');
     <section><p class="bio-box"><strong>Mede o documento, não a pessoa candidata.</strong> Não é ranking eleitoral e não prevê desempenho de governo: é uma leitura de governança do texto protocolado no TSE.</p></section>
     <section>
       <ul class="numbers">
-        <li><strong>13</strong><span>documentos oficiais analisados</span></li>
-        <li><strong>12</strong><span>perfis de propostas</span></li>
-        <li><strong>10</strong><span>clusters comparáveis</span></li>
+        <li><Count figure="13" /><span>documentos oficiais analisados</span></li>
+        <li><Count figure="12" /><span>perfis de propostas</span></li>
+        <li><Count figure="10" /><span>clusters comparáveis</span></li>
       </ul>
     </section>
     <section>

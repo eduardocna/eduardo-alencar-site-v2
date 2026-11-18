@@ -4,6 +4,7 @@ import { single } from '../data/content';
 import { profiles, email, substackUrl, ui } from '../data/site';
 import { localePath, withBase } from '../data/paths';
 import { em } from '../data/text';
+import Count from './Count.astro';
 interface Props { lang: 'es' | 'it' }
 const { lang } = Astro.props;
 const c = single[lang];
@@ -23,7 +24,7 @@ const c = single[lang];
       </div>
       <img class="portrait" src={withBase('images/eduardo-alencar.jpg')} alt="Eduardo Alencar" width="300" height="300" />
     </section>
-    <section><ul class="numbers" style="grid-template-columns:repeat(2,1fr)">{c.numbers.map(([f, l]) => <li><strong>{f}</strong><span>{l}</span></li>)}</ul></section>
+    <section><ul class="numbers" style="grid-template-columns:repeat(2,1fr)">{c.numbers.map(([f, l]) => <li><Count figure={f} /><span>{l}</span></li>)}</ul></section>
     <section>
       <p>{c.more} <a href={localePath('pt')} hreflang="pt">{c.pt}</a> · <a href={localePath('en')} hreflang="en">{c.en}</a></p>
       <h2>{c.contact}</h2>

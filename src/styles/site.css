@@ -161,6 +161,30 @@ a.card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .site-footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px}
 .site-footer a{color:var(--muted)}
 
+
+/* Movimento (Motion.astro). Só vale com JS ativo e sem "reduzir movimento". */
+.js-motion .reveal{opacity:0;transform:translateY(22px);transition:opacity .75s ease var(--d,0ms),transform .75s cubic-bezier(.2,.8,.2,1) var(--d,0ms)}
+.js-motion .reveal.in{opacity:1;transform:none}
+.numbers li{position:relative}
+.numbers li::before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:linear-gradient(90deg,var(--accent),var(--warm));transform-origin:left;transform:scaleX(1)}
+.js-motion .numbers li::before{transform:scaleX(0);transition:transform 1.5s cubic-bezier(.2,.8,.2,1) calc(var(--d,0ms) + 200ms)}
+.js-motion .numbers li.in::before{transform:scaleX(1)}
+[data-count]{display:inline-block}
+[data-count].done{animation:settle .5s ease}
+@keyframes settle{40%{transform:scale(1.06)}100%{transform:none}}
+.site-header{transition:box-shadow .3s}
+.site-header.scrolled{box-shadow:0 10px 24px -20px rgba(0,0,0,.45)}
+.js-motion .cover{animation:float 7s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
+.js-motion .cover.reveal{animation:none}
+.js-motion .cover.reveal.in{animation:float 7s ease-in-out .8s infinite}
+.home-hero .portrait{transition:transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .6s}
+.home-hero .portrait:hover{transform:scale(1.03) rotate(-1deg)}
+.chapter{transition:border-color .2s,transform .2s}
+.chapter:hover{border-color:var(--accent);transform:translateX(4px)}
+.chapter .n{transition:color .2s}
+.chapter:hover .n{color:var(--warm)}
+
 /* Celular */
 @media (max-width:980px){
   .nav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;padding:10px 16px 16px;background:var(--bg);border-bottom:1px solid var(--rule)}
@@ -186,4 +210,4 @@ a.card:hover{border-color:var(--accent);transform:translateY(-2px)}
   .brand strong{font-size:20px}
   .langs a{padding:6px 5px}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}

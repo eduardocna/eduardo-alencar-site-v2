@@ -1,0 +1,51 @@
+---
+/**
+ * Movimento do site: números que contam até o valor quando entram na tela e
+ * seções/cartões que surgem em sequência. Sem JS ou com "reduzir movimento", tudo aparece parado e completo.
+ */
+---
+<script is:inline>
+  (() => {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const root = document.documentElement;
+    if (reduce || !('IntersectionObserver' in window)) { root.classList.remove('js-motion'); return; }
+
+    // 1. Entrada em sequência
+    const groups = ['.numbers', '.doors', '.chapters', '.works', '.shorts', '.agenda', '.checks', '.tags', '.list'];
+    groups.forEach((sel) => document.querySelectorAll(sel).forEach((g) => {
+      [...g.children].forEach((child, i) => { child.classList.add('reveal'); child.style.setProperty('--d', `${Math.min(i, 8) * 70}ms`); });
+    }));
+    document.querySelectorAll('main h1, main h2, main .lede, main .eyebrow, .home-hero .portrait, .cover, .season, .subscribe-inline, .bio-box, .latest, .launch figure, .subscribe-band .wrap')
+      .forEach((el) => el.classList.add('reveal'));
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); io.unobserve(e.target);
+    }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    // 2. Contagem dos números
+    const lang = root.lang || 'pt-BR';
+    const fmt = new Intl.NumberFormat(lang.startsWith('en') ? 'en-US' : 'pt-BR');
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    const run = (el) => {
+      const target = Number(el.dataset.count); const suffix = el.dataset.suffix || ''; const dur = 1600; const t0 = performance.now();
+      const step = (now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        el.textContent = fmt.format(Math.round(target * ease(p))) + suffix;
+        if (p < 1) requestAnimationFrame(step); else el.classList.add('done');
+      };
+      requestAnimationFrame(step);
+    };
+    const counters = [...document.querySelectorAll('[data-count]')];
+    counters.forEach((el) => { el.textContent = fmt.format(0) + (el.dataset.suffix || ''); });
+    const co = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return; co.unobserve(e.target); setTimeout(() => run(e.target), 150);
+    }), { threshold: 0.4 });
+    counters.forEach((el) => co.observe(el));
+
+    // 3. Cabeçalho ganha sombra ao rolar
+    const header = document.querySelector('.site-header');
+    const onScroll = () => header?.classList.toggle('scrolled', scrollY > 8);
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  })();
+</script>

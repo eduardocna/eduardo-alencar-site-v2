@@ -6,6 +6,7 @@ import '@fontsource/dm-mono/400.css';
 import '../styles/site.css';
 import { locales, rooms, ui, profiles, substackUrl, email, isFull, type Locale } from '../data/site';
 import { localePath, withBase, absolute } from '../data/paths';
+import Motion from '../components/Motion.astro';
 
 interface Props {
   title: string;
@@ -50,7 +51,7 @@ const site = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Edua
 const graph = [person, ...(room === '' ? [site] : []), ...jsonLd];
 ---
 <!doctype html>
-<html lang={t.htmlLang}>
+<html lang={t.htmlLang} class="js-motion">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -107,6 +108,7 @@ const graph = [person, ...(room === '' ? [site] : []), ...jsonLd];
         <span class="contact-links">{profiles.map((p) => <a href={p.href} rel="me">{p.label}</a>)}<a href={`mailto:${email}`}>E-mail</a></span>
       </div>
     </footer>
+    <Motion />
     <script is:inline>
       (() => {
         const btn = document.querySelector('.menu-btn'); const nav = document.getElementById('nav');

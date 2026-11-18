@@ -13,7 +13,7 @@ export const home = {
     headline: 'Meço se a fiscalização pública funciona de fato, e mostro como o governo pode decidir por evidência.',
     lede: 'Assessor Legislativo Sênior na Câmara dos Deputados, doutor pela University of California, Irvine, e autor de *Governança em Tempo Real*.',
     numbers: [
-      { figure: '13.042', label: 'pares de requerimento e resposta parlamentar avaliados' },
+      { figure: '21.023', label: 'requerimentos de informação da Câmara analisados, de 2019 a 2025' },
       { figure: '30.304', label: 'contratações federais rastreadas por sinais de risco' },
       { figure: '20+', label: 'anos no serviço público federal' }
     ],
@@ -32,7 +32,7 @@ export const home = {
     headline: 'I measure whether public oversight actually works, and show how government can decide on evidence.',
     lede: 'Senior Legislative Advisor at Brazil’s Chamber of Deputies, PhD from the University of California, Irvine, and author of *Governança em Tempo Real* (“Real-Time Governance”).',
     numbers: [
-      { figure: '13,042', label: 'parliamentary request–response pairs scored' },
+      { figure: '21,023', label: 'parliamentary information requests analysed, 2019–2025' },
       { figure: '30,304', label: 'federal contracts screened for risk signals' },
       { figure: '20+', label: 'years in Brazil’s federal public service' }
     ],
@@ -149,10 +149,10 @@ export const newsletter = {
     description: 'Uma análise curta por semana sobre governo, dados e integridade pública. Toda terça, por e-mail.',
     eyebrow: 'Newsletter',
     heading: 'Uma análise por semana, toda terça',
-    lede: 'Governo, dados e integridade pública, em texto curto e com fonte. Por e-mail, às 7h de terça, com material extra só para quem assina.',
+    lede: 'Governo, dados e integridade pública, em texto curto e com fonte. Por e-mail, toda terça, com material extra só para quem assina.',
     getTitle: 'O que você recebe',
     get: [
-      'A edição da semana, em português e inglês, antes de sair no LinkedIn.',
+      'A edição da semana, em português e inglês, no seu e-mail.',
       'Material extra que não sai no LinkedIn.',
       'O aviso de novos vídeos, aulas e materiais antes de todo mundo.'
     ],
@@ -160,7 +160,7 @@ export const newsletter = {
     themesTitle: 'Temas',
     themes: ['IA no setor público e governança digital', 'Integridade e anticorrupção', 'Política baseada em evidência', 'Ecossistemas digitais e inclusão'],
     recentTitle: 'Edições recentes',
-    linkedin: 'Prefere o LinkedIn? A mesma edição sai às 9h em português e às 11h em inglês.',
+    linkedin: 'Prefere o LinkedIn? A edição também sai lá, em português e em inglês.',
     linkedinCta: 'Seguir no LinkedIn',
     readAll: 'Ver todas as edições no Substack'
   },
@@ -169,10 +169,10 @@ export const newsletter = {
     description: 'One short analysis a week on government, data and public integrity. Every Tuesday, by email.',
     eyebrow: 'Newsletter',
     heading: 'One analysis a week, every Tuesday',
-    lede: 'Government, data and public integrity, in short pieces with sources. By email at 7 am Brasília time on Tuesdays, with extra material only for subscribers.',
+    lede: 'Government, data and public integrity, in short pieces with sources. By email every Tuesday, with extra material only for subscribers.',
     getTitle: 'What you get',
     get: [
-      'The weekly edition, in English and Portuguese, before it appears on LinkedIn.',
+      'The weekly edition, in English and Portuguese, in your inbox.',
       'Extra material that does not appear on LinkedIn.',
       'Early notice of new videos, courses and materials.'
     ],
@@ -180,7 +180,7 @@ export const newsletter = {
     themesTitle: 'Themes',
     themes: ['AI in the public sector and digital governance', 'Integrity and anti-corruption', 'Evidence-based policy', 'Digital ecosystems and inclusion'],
     recentTitle: 'Recent editions',
-    linkedin: 'Prefer LinkedIn? The same edition comes out at 9 am in Portuguese and 11 am in English.',
+    linkedin: 'Prefer LinkedIn? The edition also comes out there, in Portuguese and English.',
     linkedinCta: 'Follow on LinkedIn',
     readAll: 'See every edition on Substack'
   }
@@ -243,8 +243,8 @@ export const about = {
     heading: 'Eduardo Alencar',
     paragraphs: [
       'Sou Assessor Legislativo Sênior na Câmara dos Deputados e trabalho há mais de 20 anos no serviço público federal, em funções de governança, integridade, gestão estratégica e fiscalização.',
-      'Construo a infraestrutura de evidência que mostra se a fiscalização pública funciona de fato: bases e sistemas que medem se o Executivo responde ao Parlamento com substância, e painéis que apontam risco em compras públicas sem tratar alerta como veredito.',
-      'Sou doutor e mestre em Social Ecology pela University of California, Irvine, economista pela Universidade de Brasília e membro do Fraud Research Group da Aston University.'
+      'Construo a infraestrutura de evidência que mostra se a fiscalização pública funciona de fato: bases que medem quanto tempo o Executivo leva para responder ao Parlamento, um método para avaliar a qualidade dessas respostas, e painéis que apontam risco em compras públicas sem tratar alerta como veredito.',
+      'Sou doutor e mestre em Social Ecology pela University of California, Irvine, economista pela Universidade de Brasília, e colaboro com o Fraud Research Group da Aston University.'
     ],
     bioTitle: 'Bio para eventos e imprensa',
     bioHint: 'Pode copiar e usar sem pedir autorização.',
@@ -281,8 +281,8 @@ export const about = {
     heading: 'Eduardo Alencar',
     paragraphs: [
       'I am a Senior Legislative Advisor at Brazil’s Chamber of Deputies, with more than 20 years in the federal public service in governance, integrity, strategic management and oversight roles.',
-      'I build the evidence infrastructure that shows whether public oversight actually works: datasets and systems that measure whether the Executive answers Parliament with substance, and dashboards that flag procurement risk without treating a flag as a verdict.',
-      'I hold a PhD and an MA in Social Ecology from the University of California, Irvine, a BA in Economics from the University of Brasília, and I am a member of the Fraud Research Group at Aston University.'
+      'I build the evidence infrastructure that shows whether public oversight actually works: datasets that measure how long the Executive takes to answer Parliament, a method to assess the quality of those answers, and dashboards that flag procurement risk without treating a flag as a verdict.',
+      'I hold a PhD and an MA in Social Ecology from the University of California, Irvine, a BA in Economics from the University of Brasília, and I collaborate with the Fraud Research Group at Aston University.'
     ],
     bioTitle: 'Bio for events and press',
     bioHint: 'Feel free to copy and use it.',
@@ -321,10 +321,10 @@ export const single = {
     description: 'Eduardo Alencar: bio, CV y enlaces. Gobernanza, integridad pública y evidencia en el sector público.',
     headline: 'Mido si la fiscalización pública realmente funciona y muestro cómo el gobierno puede decidir con evidencia.',
     bio: [
-      'Asesor Legislativo Senior en la Cámara de Diputados de Brasil, con más de 20 años en el servicio público federal. Doctor en Social Ecology por la University of California, Irvine, y miembro del Fraud Research Group de la Aston University.',
+      'Asesor Legislativo Senior en la Cámara de Diputados de Brasil, con más de 20 años en el servicio público federal. Doctor en Social Ecology por la University of California, Irvine, y colabora con el Fraud Research Group de la Aston University.',
       'Autor de *Governança em Tempo Real* (Editora JusPodivm, 2026, en portugués), sobre cómo pasar de la gobernanza por intuición a la gobernanza basada en evidencia.'
     ],
-    numbers: [['13.042', 'pares de solicitud y respuesta parlamentaria evaluados'], ['30.304', 'contrataciones federales analizadas por señales de riesgo']],
+    numbers: [['21.023', 'solicitudes de información parlamentaria analizadas, 2019-2025'], ['30.304', 'contrataciones federales analizadas por señales de riesgo']],
     cv: 'Descargar el CV (PDF)', more: 'El sitio completo está en portugués y en inglés.', pt: 'Ver en portugués', en: 'Ver en inglés',
     contact: 'Contacto', newsletter: 'La newsletter semanal se publica en portugués y en inglés.'
   },
@@ -333,10 +333,10 @@ export const single = {
     description: 'Eduardo Alencar: biografia, CV e link. Governance, integrità pubblica ed evidenza nel settore pubblico.',
     headline: 'Misuro se il controllo pubblico funziona davvero e mostro come il governo può decidere sulla base dell’evidenza.',
     bio: [
-      'Consulente Legislativo Senior alla Camera dei Deputati del Brasile, con oltre 20 anni nel servizio pubblico federale. Dottorato in Social Ecology alla University of California, Irvine, e membro del Fraud Research Group della Aston University.',
+      'Consulente Legislativo Senior alla Camera dei Deputati del Brasile, con oltre 20 anni nel servizio pubblico federale. Dottorato in Social Ecology alla University of California, Irvine, e collabora con il Fraud Research Group della Aston University.',
       'Autore di *Governança em Tempo Real* (Editora JusPodivm, 2026, in portoghese), su come passare dalla governance per intuizione alla governance basata sull’evidenza.'
     ],
-    numbers: [['13.042', 'coppie di richieste e risposte parlamentari valutate'], ['30.304', 'contratti federali analizzati per segnali di rischio']],
+    numbers: [['21.023', 'richieste di informazione parlamentari analizzate, 2019-2025'], ['30.304', 'contratti federali analizzati per segnali di rischio']],
     cv: 'Scarica il CV (PDF)', more: 'Il sito completo è in portoghese e in inglese.', pt: 'Vedi in portoghese', en: 'Vedi in inglese',
     contact: 'Contatti', newsletter: 'La newsletter settimanale esce in portoghese e in inglese.'
   }
