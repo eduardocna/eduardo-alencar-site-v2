@@ -11,8 +11,8 @@ export interface Episode {
   chapter: number;
   youtubeId: string;
   date: string; // AAAA-MM-DD
-  title: { pt: string; en: string };
-  summary: { pt: string; en: string };
+  title: { pt: string; en: string } & Partial<Record<'es' | 'it', string>>;
+  summary: { pt: string; en: string } & Partial<Record<'es' | 'it', string>>;
   transcript?: string; // PT
   sources: { label: string; href: string }[];
 }

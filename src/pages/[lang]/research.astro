@@ -3,7 +3,12 @@ import Base from '../../layouts/Base.astro';
 import { research as copy } from '../../data/content';
 import { works, typeLabel, statusLabel, type WorkItem } from '../../data/catalog';
 import { fullLocales, profiles, type FullLocale } from '../../data/site';
-import { workDestination, withBase } from '../../data/paths';
+import { workDestination, withBase, cvFile } from '../../data/paths';
+import { fmtDate } from '../../data/text';
+import { misc } from '../../data/content';
+import essays from '../../data/essays.json';
+import EvidenceStory from '../../components/EvidenceStory.astro';
+import ResearchMap from '../../components/ResearchMap.astro';
 export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
 const lang = Astro.params.lang as FullLocale;
 const c = copy[lang];
@@ -12,11 +17,13 @@ const groupOf = (w: WorkItem): Group | null => {
   if (w.kind === 'profile' || w.kind === 'teaching') return null;
   if (w.category === 'policy' || w.kind === 'brief') return 'briefs';
   if (w.category === 'tools' || w.kind === 'tool' || w.kind === 'system') return 'ferramentas';
-  if (/linkedin/i.test(String(w.type))) return 'textos';
+  if (/linkedin/i.test(String(w.type))) return null; // os ensaios vêm de essays.json, completos
   return 'publicacoes';
 };
 const order: Group[] = ['publicacoes', 'briefs', 'ferramentas', 'textos'];
-const grouped = order.map((g) => ({ id: g, label: c.groups[g], items: works.filter((w) => groupOf(w) === g).sort((a, b) => Number(b.year) - Number(a.year)) })).filter((g) => g.items.length);
+const essayCount = essays.itens.length;
+const grouped = order.filter((g) => g !== 'textos').map((g) => ({ id: g, label: c.groups[g], items: works.filter((w) => groupOf(w) === g).sort((a, b) => Number(b.year) - Number(a.year)) })).filter((g) => g.items.length);
+const essayLangLabel = { pt: 'PT', en: 'EN' } as const;
 const hasLink = (w: WorkItem) => w.verifiedLinks.length > 0;
 const pdf = (file: string) => withBase(`downloads/${file}`);
 /** Trabalhos fora do catálogo, mantidos com os mesmos endereços de PDF do site v1. */
@@ -38,6 +45,7 @@ const scholarly =profiles.filter((p) => ['ORCID', 'Google Scholar'].includes(p.l
     <div class="filters" role="group" aria-label={c.filterLabel}>
       <button type="button" data-filter="all" aria-pressed="true">{c.all}</button>
       {grouped.map((g) => <button type="button" data-filter={g.id} aria-pressed="false">{g.label} ({g.items.length})</button>)}
+      <button type="button" data-filter="textos" aria-pressed="false">{c.groups.textos} ({essayCount})</button>
     </div>
     {grouped.map((g) => (
       <section class="group" id={g.id} data-group={g.id}>
@@ -57,27 +65,40 @@ const scholarly =profiles.filter((p) => ['ORCID', 'Google Scholar'].includes(p.l
         </ul>
       </section>
     ))}
-    <section class="group" data-group="publicacoes">
-      <h2>{lang === 'pt' ? 'Outros trabalhos' : 'Other work'}</h2>
-      <ul class="works">
-        {archive.map((a) => (
-          <li class="work">
-            <h3>{a.href ? <a href={a.href}>{a.title}</a> : a.title}</h3>
-            <span class="tagline">{a.meta[lang]}</span>
-            {a.href && <a class="open" href={a.href}>PDF ↗</a>}
+    <section class="group essays" id="textos" data-group="textos">
+      <h2>{c.groups.textos}</h2>
+      <p class="muted">{c.essaysCount(essayCount)}</p>
+      <ul class="essay-list" data-essays>
+        {essays.itens.map((e) => (
+          <li class="essay" data-lang={e.lang}>
+            <time datetime={e.date}>{fmtDate(e.date, lang)}</time>
+            <a href={e.url} rel="noopener">{e.title}</a>
+            <span class="lang-tag">{essayLangLabel[e.lang as 'pt' | 'en']}</span>
           </li>
         ))}
       </ul>
     </section>
     <section class="group" data-group="publicacoes">
-      <h2>{c.agendaTitle}</h2>
-      <div class="agenda">{c.agenda.map(([h, p]) => <div class="card"><h3>{h}</h3><p>{p}</p></div>)}</div>
+      <h2>{misc[lang].otherWork}</h2>
+      <ul class="works">
+        {archive.map((a) => (
+          <li class="work">
+            <h3>{a.href ? <a href={a.href}>{a.title}</a> : a.title}</h3>
+            <span class="tagline">{(a.meta as Record<string, string>)[lang] ?? a.meta.en}</span>
+            {a.href && <a class="open" href={a.href}>PDF ↗</a>}
+          </li>
+        ))}
+      </ul>
     </section>
+  </div>
+  <EvidenceStory lang={lang} />
+  <ResearchMap lang={lang} />
+  <div class="wrap">
     <section class="group" id="cv">
       <h2>{c.cvTitle}</h2>
       <p>{c.cvText}</p>
       <div class="actions">
-        <a class="btn ghost" href={withBase(`downloads/cv-eduardo-alencar-${lang}.pdf`)}>{c.cvCta}</a>
+        <a class="btn ghost" href={cvFile(lang)}>{c.cvCta}</a>
         {scholarly.map((p) => <a class="btn ghost" href={p.href}>{p.label}</a>)}
       </div>
     </section>
@@ -89,6 +110,16 @@ const scholarly =profiles.filter((p) => ['ORCID', 'Google Scholar'].includes(p.l
         buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === f)));
         document.querySelectorAll('[data-group]').forEach((s) => { s.hidden = f !== 'all' && s.dataset.group !== f; });
       };
+      const list = document.querySelector('[data-essays]');
+      if (list) {
+        const items = [...list.children]; const LIMIT = 15;
+        if (items.length > LIMIT) {
+          items.slice(LIMIT).forEach((li) => { li.hidden = true; });
+          const more = document.createElement('button'); more.type = 'button'; more.className = 'btn ghost small'; more.textContent = document.documentElement.lang.startsWith('pt') ? `Mostrar todos (${items.length})` : `Show all (${items.length})`;
+          more.addEventListener('click', () => { items.forEach((li) => { li.hidden = false; }); more.remove(); });
+          list.after(more);
+        }
+      }
       buttons.forEach((b) => b.addEventListener('click', () => { apply(b.dataset.filter); history.replaceState(null, '', b.dataset.filter === 'all' ? location.pathname : `#${b.dataset.filter}`); }));
       const h = location.hash.slice(1); if ([...buttons].some((b) => b.dataset.filter === h)) apply(h);
     })();

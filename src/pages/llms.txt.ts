@@ -12,7 +12,7 @@ export const GET: APIRoute = () => {
 > Eduardo Alencar (Eduardo Carvalho Nepomuceno Alencar) is a Senior Legislative Advisor at Brazil's Chamber of Deputies, PhD in Social Ecology (University of California, Irvine), and author of the book "Governança em Tempo Real" (Editora JusPodivm, 2026). He works on public integrity, parliamentary oversight, procurement fraud risk and the responsible use of AI in government. The site is in Portuguese and English.
 
 ## Pages
-- [Home (PT)](${u(localePath('pt'))}) · [Home (EN)](${u(localePath('en'))})
+- [Home (PT)](${u(localePath('pt'))}) · [Home (EN)](${u(localePath('en'))}) · [Home (ES)](${u(localePath('es'))}) · [Home (IT)](${u(localePath('it'))})
 - [Book](${u(localePath('en', 'book/'))}): "Governança em Tempo Real: como o Brasil pode parar de fingir que governa". Publisher page: ${bookUrl}
 - [Videos](${u(localePath('en', 'videos/'))})
 - [Newsletter](${u(localePath('en', 'newsletter/'))}): weekly analysis, by email at ${substackHome}
@@ -21,7 +21,7 @@ export const GET: APIRoute = () => {
 - [CV (PDF, English)](${u(withBase('downloads/cv-eduardo-alencar-en.pdf'))})
 
 ## Book chapters
-${chapters.map((c) => `${c.n}. ${c.pt} (${c.en})`).join('\n')}
+${chapters.map((c) => `${c.n}. ${c.title.pt} (${c.title.en})`).join('\n')}
 
 ## Work with a public source
 ${items}

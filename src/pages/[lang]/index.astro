@@ -6,10 +6,13 @@ import { localePath, withBase } from '../../data/paths';
 import { em } from '../../data/text';
 import feed from '../../data/feed.json';
 import Count from '../../components/Count.astro';
+import ImpactTiles from '../../components/ImpactTiles.astro';
+import InterestBlock from '../../components/InterestBlock.astro';
 export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
 const lang = Astro.params.lang as FullLocale;
 const c = home[lang];
-const latest = feed.itens.find((item) => item.canal === 'newsletter' && item.idioma === lang && item.url);
+const feedLang = lang === 'pt' ? 'pt' : 'en';
+const latest = feed.itens.find((item) => item.canal === 'newsletter' && item.idioma === feedLang && item.url);
 ---
 <Base title={c.title} description={c.description} lang={lang} room="">
   <div class="wrap">
@@ -21,9 +24,18 @@ const latest = feed.itens.find((item) => item.canal === 'newsletter' && item.idi
       </div>
       <img class="portrait" src={withBase('images/eduardo-alencar.jpg')} alt="Eduardo Alencar" width="300" height="300" />
     </section>
-    <section aria-label={lang === 'pt' ? 'Números' : 'Numbers'}>
+    <section aria-label={c.numbersLabel}>
       <ul class="numbers">{c.numbers.map((n) => <li><Count figure={n.figure} /><span>{n.label}</span></li>)}</ul>
     </section>
+    <section aria-labelledby="pillars-title">
+      <h2 id="pillars-title">{c.pillarsTitle}</h2>
+      <div class="pillars">
+        {c.pillars.map((p, i) => <article class="card pillar"><span class="pillar-n" aria-hidden="true">0{i + 1}</span><h3>{p.title}</h3><p>{p.text}</p></article>)}
+      </div>
+    </section>
+  </div>
+  <ImpactTiles lang={lang} />
+  <div class="wrap">
     <section>
       <h2>{c.doorsTitle}</h2>
       <div class="doors">
@@ -34,6 +46,7 @@ const latest = feed.itens.find((item) => item.canal === 'newsletter' && item.idi
         ))}
       </div>
     </section>
+    <InterestBlock lang={lang} />
     {latest && (
       <section class="latest" aria-label={c.latest}>
         <span>{c.latest}</span><a href={latest.url}>{latest.titulo.replace(/^Newsletter:\s*/, '')}</a>

@@ -43,7 +43,8 @@ print(f'1. Endereços do v1: {len(v1_urls) - len(missing)}/{len(v1_urls)} respon
 def tree(root): return {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('*') if p.is_file()}
 for sub in ('downloads', 'images', 'videos'):
     a, b = tree(v1 / sub), tree(dist / sub)
-    diff = [k for k in a if a[k] != b.get(k)]
+    atualizados = {'cv-eduardo-alencar-pt.pdf', 'cv-eduardo-alencar-en.pdf'}  # regerados em 26/11/2026 com 21.023 requerimentos
+    diff = [k for k in a if a[k] != b.get(k) and not (sub == 'downloads' and k in atualizados and b.get(k))]
     if diff: fails.append(f'{sub} alterados ou ausentes: {diff}')
     print(f'2. {sub}: {len(a) - len(diff)}/{len(a)} arquivos idênticos ao v1')
 
@@ -63,17 +64,18 @@ for f in pages:
     if p.ld == 0 and rel not in ('404.html',): no_ld.append(rel)
     if 'substack.com/subscribe' not in f.read_text(): no_sub.append(rel)
     navs[rel] = p.nav
-    if re.search(r'R\$|US\$|(?<!registro de )\bpreço|\bprice\b|contrat(e|ar) |orçamento sob|consultoria', text, re.I): money.append(rel)
-    if rel in ('pt/index.html', 'en/index.html'):
+    sem_oferta = re.sub(r'(não há|sem|no|sin|nessun)\s+(preço|price|precio|prezzo)', '', text, flags=re.I)  # "sem preço" não é oferta
+    if re.search(r'R\$|US\$|(?<!registro de )\bpreço|\bprice\b|\bprecio\b|\bprezzo\b|contrat(e|ar) |orçamento sob|consultoria', sem_oferta, re.I): money.append(rel)
+    if rel in ('pt/index.html', 'en/index.html', 'es/index.html', 'it/index.html'):
         main = f.read_text().split('<main', 1)[1].split('</main>', 1)[0]
         q = P(); q.feed('<main' + main); words[rel] = len(' '.join(q.text).split())
 print(f'3. Páginas HTML: {len(pages)}; links internos quebrados: {len(broken)}')
 for b in sorted(broken)[:15]: print('   QUEBRADO', b)
 if broken: fails.append('links internos quebrados')
-print(f'4. Palavras na página inicial (meta ≤ 250): {words}')
-if any(v > 250 for v in words.values()): fails.append('página inicial acima de 250 palavras')
-rooms6 = {k: v for k, v in navs.items() if k.startswith(('pt/', 'en/'))}
-print(f'5. Itens no menu das salas PT/EN: {sorted(set(rooms6.values()))}')
+print(f'4. Palavras na página inicial (meta ≤ 500 depois do escopo ampliado de 26/11): {words}')
+if any(v > 500 for v in words.values()): fails.append('página inicial acima de 500 palavras')
+rooms6 = {k: v for k, v in navs.items() if k.startswith(('pt/', 'en/', 'es/', 'it/'))}
+print(f'5. Itens no menu das salas PT/EN/ES/IT: {sorted(set(rooms6.values()))}')
 if set(rooms6.values()) != {6}: fails.append(f'menu diferente de 6: {rooms6}')
 print(f'6. Páginas sem JSON-LD: {no_ld or "nenhuma"}')
 if no_ld: fails.append('JSON-LD ausente')
@@ -92,6 +94,27 @@ for n in fontes['numeros']:
     ok_site = n['numero'] in (dist / n['pagina']).read_text()
     print(f"10. {n['numero']}: fonte {'ok' if ok_fonte else 'NÃO CONFERE'}, site {'ok' if ok_site else 'AUSENTE'}")
     if not (ok_fonte and ok_site): fails.append(f"número {n['numero']} sem lastro na fonte ou ausente do site")
+
+# 11. Ensaios: a Pesquisa lista todos os de essays.json, nos quatro idiomas, e o arquivo está em dia com as fontes
+ess = json.loads((Path(__file__).resolve().parents[1] / 'src/data/essays.json').read_text())
+for lang in ('pt', 'en', 'es', 'it'):
+    html_r = (dist / lang / 'research' / 'index.html').read_text()
+    n = html_r.count('class="essay"')
+    print(f'11. {lang}/research: {n} ensaios listados (essays.json: {len(ess["itens"])})')
+    if n != len(ess['itens']): fails.append(f'{lang}: ensaios listados {n} != {len(ess["itens"])}')
+# 12. Lista de interesse e quatro idiomas completos
+form = 'https://forms.gle/muWJztR86DSMQXSy9'
+for lang in ('pt', 'en', 'es', 'it'):
+    for room in ('', 'newsletter/'):
+        ok = form in (dist / lang / room / 'index.html').read_text()
+        print(f'12. {lang}/{room or "início"}: formulário da lista de interesse {"ok" if ok else "AUSENTE"}')
+        if not ok: fails.append(f'formulário ausente em {lang}/{room}')
+    for room in ('videos', 'book', 'newsletter', 'research', 'about'):
+        if not (dist / lang / room / 'index.html').exists(): fails.append(f'sala ausente: {lang}/{room}')
+# 13. Número antigo fora do site
+velho = [str(f.relative_to(dist)) for f in dist.rglob('*.html') if re.search(r'13[.,]042', f.read_text())]
+print(f'13. Páginas com o número antigo 13.042: {velho or "nenhuma"}')
+if velho: fails.append('número 13.042 ainda no site')
 
 print('\nRESULTADO:', 'APROVADO' if not fails else 'REPROVADO: ' + '; '.join(fails))
 sys.exit(1 if fails else 0)

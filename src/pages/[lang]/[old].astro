@@ -1,16 +1,14 @@
 ---
-/** Endereços antigos (v1). PT/EN: seções que viraram parte de uma sala. ES/IT: tudo vai para a página única. */
+/** Endereços antigos (v1). Seções que viraram parte de uma sala, nos quatro idiomas. */
 import Redirect from '../../components/Redirect.astro';
 import { localePath } from '../../data/paths';
+import { locales } from '../../data/site';
 export function getStaticPaths() {
   const fullMoves: Record<string, string> = {
     briefs: 'research/#briefs', 'evidence-lab': 'research/#ferramentas', publications: 'research/#publicacoes',
     writing: 'newsletter/', teaching: 'about/#teaching', cv: 'about/#cv', contact: 'about/#contact'
   };
-  const singleOld = ['about', 'book', 'research', 'briefs', 'evidence-lab', 'publications', 'newsletter', 'writing', 'teaching', 'cv', 'contact'];
-  const full = ['pt', 'en'].flatMap((lang) => Object.entries(fullMoves).map(([old, to]) => ({ params: { lang, old }, props: { to: localePath(lang as 'pt', to) } })));
-  const single = ['es', 'it'].flatMap((lang) => singleOld.map((old) => ({ params: { lang, old }, props: { to: localePath(lang as 'es') } })));
-  return [...full, ...single];
+  return locales.flatMap((lang) => Object.entries(fullMoves).map(([old, to]) => ({ params: { lang, old }, props: { to: localePath(lang, to) } })));
 }
 const { to } = Astro.props as { to: string };
 ---

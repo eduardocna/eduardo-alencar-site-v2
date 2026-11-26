@@ -1,6 +1,48 @@
 {
-  "atualizado": "2026-11-18",
+  "atualizado": "2026-11-23",
   "itens": [
+    {
+      "data": "2026-11-23",
+      "canal": "youtube",
+      "idioma": "pt",
+      "titulo": "Integridade: prevenção, detecção, punição e aprendizado",
+      "url": "https://youtu.be/6Hov8xBHu7M"
+    },
+    {
+      "data": "2026-11-22",
+      "canal": "linkedin",
+      "idioma": "pt",
+      "titulo": "No sábado, em Chicago, apresentei dois papers no encontro anual da American Society of Criminology",
+      "url": "https://www.linkedin.com/feed/update/urn:li:share:7530238701558444032/"
+    },
+    {
+      "data": "2026-11-21",
+      "canal": "linkedin",
+      "idioma": "en",
+      "titulo": "Saturday in Chicago I presented two papers at the American Society of Criminology",
+      "url": "https://www.linkedin.com/feed/update/urn:li:share:7530143160765804544/"
+    },
+    {
+      "data": "2026-11-21",
+      "canal": "youtube",
+      "idioma": "pt",
+      "titulo": "Não dá para auditar tudo",
+      "url": "https://youtu.be/N5ns3tC-5vg"
+    },
+    {
+      "data": "2026-11-20",
+      "canal": "youtube",
+      "idioma": "en",
+      "titulo": "Chairing a session at the American Society of Criminology (ASC 2026)",
+      "url": "https://youtu.be/PYvu0Kv5EVk"
+    },
+    {
+      "data": "2026-11-19",
+      "canal": "youtube",
+      "idioma": "pt",
+      "titulo": "\"Barriga de aluguel\" nas atas de registro de preço",
+      "url": "https://youtu.be/zzNFAMK-j3k"
+    },
     {
       "data": "2026-11-18",
       "canal": "linkedin",
@@ -238,48 +280,6 @@
       "idioma": "en",
       "titulo": "Newsletter: Who Oversees the Owner? What the OECD Shows About State-Owned Enterprises",
       "url": "https://www.linkedin.com/pulse/who-oversees-owner-what-oecd-shows-state-owned-eduardo-alencar-ltkhf"
-    },
-    {
-      "data": "2026-10-27",
-      "canal": "newsletter",
-      "idioma": "pt",
-      "titulo": "Newsletter: Quem fiscaliza o dono? O que a OCDE mostra sobre as estatais",
-      "url": "https://pt.linkedin.com/pulse/quem-fiscaliza-o-dono-que-ocde-mostra-sobre-estatais-eduardo-alencar-g289f"
-    },
-    {
-      "data": "2026-10-27",
-      "canal": "linkedin",
-      "idioma": "en",
-      "titulo": "More than 20 years in Brazil's federal public service (video)",
-      "url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7520847001157054465/"
-    },
-    {
-      "data": "2026-10-27",
-      "canal": "linkedin",
-      "idioma": "pt",
-      "titulo": "Mais de 20 anos no serviço público federal (vídeo)",
-      "url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7520829662952837121/"
-    },
-    {
-      "data": "2026-10-26",
-      "canal": "linkedin",
-      "idioma": "pt",
-      "titulo": "Vou a Chicago para o encontro anual da American Society of Criminology",
-      "url": "https://www.linkedin.com/feed/update/urn:li:share:7520582970391375872/"
-    },
-    {
-      "data": "2026-10-26",
-      "canal": "linkedin",
-      "idioma": "en",
-      "titulo": "Heading to Chicago for the American Society of Criminology Annual Meeting",
-      "url": "https://www.linkedin.com/feed/update/urn:li:share:7520522179978018816/"
-    },
-    {
-      "data": "2026-10-26",
-      "canal": "linkedin",
-      "idioma": "en",
-      "titulo": "Tomorrow: a short video on 20+ years in public service",
-      "url": "https://www.linkedin.com/feed/update/urn%3Ali%3Ashare%3A7520517384512782337"
     }
   ]
 }

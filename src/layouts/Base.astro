@@ -4,6 +4,7 @@ import '@fontsource/dm-sans/400.css';
 import '@fontsource/dm-sans/500.css';
 import '@fontsource/dm-mono/400.css';
 import '../styles/site.css';
+import '../styles/animations.css';
 import { locales, rooms, ui, profiles, substackUrl, email, isFull, type Locale } from '../data/site';
 import { localePath, withBase, absolute } from '../data/paths';
 import Motion from '../components/Motion.astro';
@@ -14,7 +15,7 @@ interface Props {
   lang: Locale;
   /** Caminho da sala atual, relativo à língua ('' = início). */
   room?: string;
-  /** Endereço desta página em cada língua (caminho a partir da raiz). Padrão: mesma sala em PT/EN, página única em ES/IT. */
+  /** Endereço desta página em cada língua (caminho a partir da raiz). Padrão: a mesma sala nos quatro idiomas. */
   alternates?: Partial<Record<Locale, string>>;
   /** Caminho canônico, se diferente de /<lang>/<room>. */
   canonicalPath?: string;
@@ -30,7 +31,7 @@ const preview = import.meta.env.PUBLIC_PREVIEW === 'true';
 const goat = import.meta.env.PUBLIC_GOATCOUNTER;
 
 const defaultAlternates: Partial<Record<Locale, string>> = {
-  pt: localePath('pt', room), en: localePath('en', room), es: localePath('es'), it: localePath('it')
+  pt: localePath('pt', room), en: localePath('en', room), es: localePath('es', room), it: localePath('it', room)
 };
 const alternates = Astro.props.alternates ?? defaultAlternates;
 const canonical = absolute(canonicalPath ?? localePath(lang, room));
@@ -41,13 +42,13 @@ const person = {
   '@context': 'https://schema.org', '@type': 'Person', '@id': absolute(withBase('#person')),
   name: 'Eduardo Alencar', alternateName: 'Eduardo Carvalho Nepomuceno Alencar',
   url: absolute(withBase('')), image: absolute(withBase('images/eduardo-alencar.jpg')),
-  jobTitle: lang === 'pt' ? 'Assessor Legislativo Sênior' : 'Senior Legislative Advisor',
+  jobTitle: ({ pt: 'Assessor Legislativo Sênior', en: 'Senior Legislative Advisor', es: 'Asesor Legislativo Senior', it: 'Consulente Legislativo Senior' } as const)[lang],
   worksFor: { '@type': 'GovernmentOrganization', name: 'Câmara dos Deputados' },
   alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'University of California, Irvine' }, { '@type': 'CollegeOrUniversity', name: 'Universidade de Brasília' }],
-  knowsAbout: ['public integrity', 'anti-corruption', 'parliamentary oversight', 'public procurement fraud', 'evidence-based policy', 'AI in government'],
+  knowsAbout: ['public governance', 'public policy evaluation', 'public integrity', 'anti-corruption', 'parliamentary oversight', 'public procurement fraud', 'evidence-based policy', 'state capacity', 'AI in government'],
   sameAs: profiles.map((p) => p.href)
 };
-const site = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Eduardo Alencar', url: absolute(withBase('')), inLanguage: ['pt-BR', 'en'], publisher: { '@id': person['@id'] } };
+const site = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Eduardo Alencar', url: absolute(withBase('')), inLanguage: ['pt-BR', 'en', 'es', 'it'], publisher: { '@id': person['@id'] } };
 const graph = [person, ...(room === '' ? [site] : []), ...jsonLd];
 ---
 <!doctype html>

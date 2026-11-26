@@ -11,7 +11,7 @@
     if (reduce || !('IntersectionObserver' in window)) { root.classList.remove('js-motion'); return; }
 
     // 1. Entrada em sequência
-    const groups = ['.numbers', '.doors', '.chapters', '.works', '.shorts', '.agenda', '.checks', '.tags', '.list'];
+    const groups = ['.numbers', '.doors', '.pillars', '.chapters', '.works', '.shorts', '.agenda', '.checks', '.tags', '.list'];
     groups.forEach((sel) => document.querySelectorAll(sel).forEach((g) => {
       [...g.children].forEach((child, i) => { child.classList.add('reveal'); child.style.setProperty('--d', `${Math.min(i, 8) * 70}ms`); });
     }));
@@ -25,7 +25,7 @@
 
     // 2. Contagem dos números
     const lang = root.lang || 'pt-BR';
-    const fmt = new Intl.NumberFormat(lang.startsWith('en') ? 'en-US' : 'pt-BR');
+    const fmt = new Intl.NumberFormat(lang.startsWith('en') ? 'en-US' : 'pt-BR');  // ES e IT usam o ponto de milhar, como o PT
     const ease = (t) => 1 - Math.pow(1 - t, 3);
     const run = (el) => {
       const target = Number(el.dataset.count); const suffix = el.dataset.suffix || ''; const dur = 1600; const t0 = performance.now();
@@ -42,6 +42,19 @@
       if (!e.isIntersecting) return; co.unobserve(e.target); setTimeout(() => run(e.target), 150);
     }), { threshold: 0.4 });
     counters.forEach((el) => co.observe(el));
+
+    // 4. Elevação, inclinação 3D e brilho que segue o cursor (só com mouse; portado do site v1)
+    if (matchMedia('(hover: hover)').matches) document.querySelectorAll('.glass, .pillar, .doors .card, .interest').forEach((box) => {
+      box.classList.add('tilt');
+      box.addEventListener('pointermove', (event) => {
+        const r = box.getBoundingClientRect(); const x = (event.clientX - r.left) / r.width, y = (event.clientY - r.top) / r.height;
+        const max = 7 * Math.min(1, 420 / r.width);
+        box.style.setProperty('--mx', `${x * 100}%`); box.style.setProperty('--my', `${y * 100}%`);
+        box.style.setProperty('--ry', `${((x - .5) * 2 * max).toFixed(2)}deg`); box.style.setProperty('--rx', `${((.5 - y) * 2 * max).toFixed(2)}deg`);
+        box.classList.add('tilting');
+      });
+      box.addEventListener('pointerleave', () => { box.classList.remove('tilting'); box.style.setProperty('--rx', '0deg'); box.style.setProperty('--ry', '0deg'); });
+    });
 
     // 3. Cabeçalho ganha sombra ao rolar
     const header = document.querySelector('.site-header');

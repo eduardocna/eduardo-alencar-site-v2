@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { book as copy, chapters, pressUrl } from '../../data/content';
+import { book as copy, chapters, misc, pressUrl } from '../../data/content';
 import { episodes } from '../../data/videos';
 import { fullLocales, bookUrl, type FullLocale } from '../../data/site';
 import { localePath, withBase, absolute } from '../../data/paths';
@@ -13,7 +13,7 @@ const jsonLd = [{
   author: { '@id': absolute(withBase('#person')) }, publisher: { '@type': 'Organization', name: 'Editora JusPodivm' },
   isbn: '9788544279151', inLanguage: 'pt-BR', datePublished: '2026', url: bookUrl,
   image: absolute(withBase('images/governanca-em-tempo-real-capa.png')),
-  hasPart: chapters.map((ch) => ({ '@type': 'Chapter', position: ch.n, name: ch.pt }))
+  hasPart: chapters.map((ch) => ({ '@type': 'Chapter', position: ch.n, name: ch.title.pt }))
 }];
 ---
 <Base title={c.title} description={c.description} lang={lang} room="book/" image="images/governanca-em-tempo-real-capa.png" jsonLd={jsonLd}>
@@ -27,7 +27,7 @@ const jsonLd = [{
         <p class="meta">{c.meta}</p>
         <div class="actions"><a class="btn" href={bookUrl} data-goatcounter-click="livro-editora">{c.cta}</a></div>
       </div>
-      <img class="cover" src={withBase('images/governanca-em-tempo-real-capa.png')} alt={lang === 'pt' ? 'Capa do livro Governança em Tempo Real' : 'Cover of the book Governança em Tempo Real'} width="408" height="596" />
+      <img class="cover" src={withBase('images/governanca-em-tempo-real-capa.png')} alt={misc[lang].coverAlt} width="408" height="596" />
     </header>
     <section><p class="lede">{c.body}</p></section>
     <section>
@@ -39,8 +39,12 @@ const jsonLd = [{
           return (
             <li class="chapter">
               <span class="n" aria-hidden="true">{ch.n}</span>
-              <div><h3>{c.chapter} {ch.n} · {lang === 'pt' ? ch.pt : ch.en}</h3><p>{lang === 'pt' ? ch.qpt : ch.qen}</p></div>
-              <span class="ep">{ep ? <a href={localePath(lang, `videos/${ep.slug}/`)}>▶ {lang === 'pt' ? 'Episódio' : 'Episode'} {ep.number}</a> : c.episodePending}</span>
+              <div>
+                <h3>{misc[lang].chapter} {ch.n} · {ch.title[lang]}{lang !== 'pt' && <small class="orig"> ({ch.title.pt})</small>}</h3>
+                <p class="q">{ch.q[lang]}</p>
+                <p class="gloss"><span>{c.glossLabel}:</span> {ch.gloss[lang]}</p>
+              </div>
+              <span class="ep" title={ep ? undefined : c.episodeHint}>{ep ? <a href={localePath(lang, `videos/${ep.slug}/`)}>▶ {misc[lang].episode} {ep.number}</a> : <span class="soon">{c.episodePending}</span>}</span>
             </li>
           );
         })}
@@ -50,6 +54,7 @@ const jsonLd = [{
       <div>
         <h2>{c.launchTitle}</h2>
         <p>{c.launch}</p>
+        <figure class="photo-fig"><img src={withBase('images/lancamento-livraria-leitura.webp')} alt={misc[lang].photoLaunch} width="1100" height="825" loading="lazy" /><figcaption>{misc[lang].photoLaunch}</figcaption></figure>
         <h3>{c.pressTitle}</h3>
         <p><a href={pressUrl}>{c.press}</a></p>
       </div>

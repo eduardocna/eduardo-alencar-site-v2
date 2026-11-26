@@ -1,12 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { about as copy } from '../../data/content';
+import { about as copy, misc } from '../../data/content';
 import { fullLocales, profiles, email, substackUrl, ui, type FullLocale } from '../../data/site';
-import { withBase } from '../../data/paths';
+import { withBase, cvFile } from '../../data/paths';
 export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
 const lang = Astro.params.lang as FullLocale;
 const c = copy[lang];
-const subject = encodeURIComponent(lang === 'pt' ? 'Convite' : 'Invitation');
+const subject = encodeURIComponent(misc[lang].invitation);
 ---
 <Base title={c.title} description={c.description} lang={lang} room="about/" jsonLd={[{ '@context': 'https://schema.org', '@type': 'ProfilePage', mainEntity: { '@id': new URL(withBase('#person'), import.meta.env.SITE).href } }]}>
   <div class="wrap">
@@ -32,6 +32,10 @@ const subject = encodeURIComponent(lang === 'pt' ? 'Convite' : 'Invitation');
       </div>
     </section>
 
+    <section class="photo-row">
+      <figure class="photo-fig wide"><img src={withBase('images/sobre-formacao.webp')} alt={misc[lang].photoLaunch} width="1200" height="900" loading="lazy" /><figcaption>{misc[lang].photoLaunch}</figcaption></figure>
+    </section>
+
     <section id="teaching">
       <h2>{c.teachingTitle}</h2>
       <ul class="list">{c.teaching.map(([h, p]) => <li><strong>{h}</strong><span class="muted">{p}</span></li>)}</ul>
@@ -40,7 +44,7 @@ const subject = encodeURIComponent(lang === 'pt' ? 'Convite' : 'Invitation');
     <section id="cv">
       <h2>{c.cvTitle}</h2>
       <ul class="list">{c.cvItems.map((i) => <li>{i}</li>)}</ul>
-      <div class="actions"><a class="btn ghost" href={withBase(`downloads/cv-eduardo-alencar-${lang}.pdf`)}>{c.cvCta}</a></div>
+      <div class="actions"><a class="btn ghost" href={cvFile(lang)}>{c.cvCta}</a></div>
     </section>
 
     <section id="contact" class="two-col">

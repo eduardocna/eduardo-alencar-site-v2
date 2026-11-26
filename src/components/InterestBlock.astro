@@ -1,0 +1,15 @@
+---
+/** Lista de interesse 2027 (governança pública): chamada para o Google Forms, nos quatro idiomas. */
+import { interest, interestFormUrl } from '../data/content';
+import type { Locale } from '../data/site';
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const c = interest[lang];
+---
+<section class="interest" id="lista-de-interesse" aria-labelledby="interest-title">
+  <p class="eyebrow">{c.eyebrow}</p>
+  <h2 id="interest-title">{c.title}</h2>
+  <p>{c.text}</p>
+  <div class="actions"><a class="btn" href={interestFormUrl} rel="noopener" data-goatcounter-click="lista-interesse-2027">{c.cta}</a></div>
+  <p class="muted small">{c.note}</p>
+</section>

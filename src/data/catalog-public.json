@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "updated": "2026-11-13",
+  "updated": "2026-11-22",
   "items": [
     {
       "slug": "synthetic-control-lava-jato",
@@ -699,6 +699,64 @@
       "public_file": "04 — Policy briefs/three-horizons-public-policy-brazil-2026.pdf",
       "public_url": "/downloads/three-horizons-public-policy-brazil-2026.pdf",
       "rights": "Own authorship; CC BY 4.0; published on Zenodo by the author on 28/10/2026."
+    },
+    {
+      "authors": [
+        "Eduardo C. N. Alencar"
+      ],
+      "year": 2026,
+      "type": "Policy brief",
+      "status": "publicado",
+      "access": "publico",
+      "last_checked": "2026-11-22",
+      "themes": [
+        "deepfakes",
+        "proteção de dados",
+        "integridade eleitoral"
+      ],
+      "methods": [
+        "análise documental",
+        "verificação em fonte oficial"
+      ],
+      "slug": "deepfakes-regra-avancou-verificacao-nao",
+      "title": "Deepfakes: a regra avançou, a verificação não",
+      "languages": [
+        "pt"
+      ],
+      "summary": "Parte do Radar Tecnológico nº 6 da ANPD sobre deepfakes e confere as normas brasileiras citadas nos textos oficiais. Mostra que a responsabilidade se deslocou do autor para o provedor (Decretos 12.975 e 12.976/2026 e ECA Digital) e que a verificação de autenticidade ainda não sustenta a aplicação das regras. Propõe fatores críticos de implementação, lacunas colaborativas e cinco recomendações.",
+      "canonical_source": "Zenodo, DOI 10.5281/zenodo.24434265",
+      "public_file": "04 — Policy briefs/deepfakes-regra-avancou-verificacao-nao-2026.pdf",
+      "public_url": "/downloads/deepfakes-regra-avancou-verificacao-nao-2026.pdf",
+      "rights": "Autoria própria; CC BY 4.0; publicado no Zenodo pelo autor em 22/11/2026."
+    },
+    {
+      "authors": [
+        "Eduardo C. N. Alencar"
+      ],
+      "year": 2026,
+      "type": "Policy brief",
+      "status": "publicado",
+      "access": "publico",
+      "last_checked": "2026-11-22",
+      "themes": [
+        "deepfakes",
+        "data protection",
+        "election integrity"
+      ],
+      "methods": [
+        "documentary analysis",
+        "verification against official sources"
+      ],
+      "slug": "deepfakes-rules-advanced-verification-not",
+      "title": "Deepfakes: rules advanced, verification has not",
+      "languages": [
+        "en"
+      ],
+      "summary": "Starts from ANPD's Technology Radar no. 6 on deepfakes and checks the Brazilian norms it cites against the official texts. Shows that responsibility moved from the author to the provider (Decrees 12,975 and 12,976/2026 and the ECA Digital statute) and that verification of authenticity does not yet support enforcement. Proposes critical success factors, collaborative gap analysis and five recommendations.",
+      "canonical_source": "Zenodo, DOI 10.5281/zenodo.24434267",
+      "public_file": "04 — Policy briefs/deepfakes-rules-advanced-verification-not-2026.pdf",
+      "public_url": "/downloads/deepfakes-rules-advanced-verification-not-2026.pdf",
+      "rights": "Own authorship; CC BY 4.0; published on Zenodo by the author on 22/11/2026."
     }
   ]
 }

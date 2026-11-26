@@ -1,7 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import YouTube from '../../../components/YouTube.astro';
-import { videos as copy, chapters } from '../../../data/content';
+import { videos as copy, chapters, misc } from '../../../data/content';
 import { episodes, shorts } from '../../../data/videos';
 import { fullLocales, youtubeChannel, substackUrl, ui, type FullLocale } from '../../../data/site';
 import { localePath } from '../../../data/paths';
@@ -33,8 +33,8 @@ const jsonLd = shorts.map((s) => ({
       <section>
         <ul class="list">
           {episodes.map((e) => (
-            <li><a href={localePath(lang, `videos/${e.slug}/`)}><strong>{e.number}. {e.title[lang]}</strong></a>
-            <span class="muted small">{lang === 'pt' ? 'Capítulo' : 'Chapter'} {e.chapter}: {chapters[e.chapter - 1][lang]} · {fmtDate(e.date, lang)}</span></li>
+            <li><a href={localePath(lang, `videos/${e.slug}/`)}><strong>{e.number}. {(e.title[lang] ?? e.title.en)}</strong></a>
+            <span class="muted small">{misc[lang].chapter} {e.chapter}: {chapters[e.chapter - 1].title[lang]} · {fmtDate(e.date, lang)}</span></li>
           ))}
         </ul>
       </section>

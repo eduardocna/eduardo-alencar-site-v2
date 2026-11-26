@@ -211,3 +211,33 @@ a.card:hover{border-color:var(--accent);transform:translateY(-2px)}
   .langs a{padding:6px 5px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+
+/* Escopo ampliado: pilares, lista de interesse, ensaios completos, glosas dos capítulos */
+.pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pillar{position:relative;padding:26px 24px}
+.pillar-n{font:400 14px var(--mono);letter-spacing:.14em;color:var(--accent)}
+.pillar h3{margin:10px 0 8px;font:400 24px/1.2 var(--serif)}
+.pillar p{margin:0;color:var(--ink-2);font-size:16.5px;line-height:1.6}
+.interest{margin:56px 0;padding:34px clamp(22px,4vw,44px);border:1px solid var(--rule);border-radius:var(--radius);background:linear-gradient(135deg,var(--accent-soft),var(--surface))}
+.interest h2{margin:6px 0 12px;font-size:clamp(26px,3.4vw,38px)}
+.interest p{max-width:62ch}
+.essay-list{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:0;border-top:1px solid var(--rule)}
+.essay{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:11px 2px;border-bottom:1px solid var(--rule)}
+.essay time{color:var(--muted);font:12px var(--mono);letter-spacing:.04em}
+.essay a{font:500 17px/1.4 var(--sans);text-decoration:none;color:var(--ink)}
+.essay a:hover{color:var(--accent-ink);text-decoration:underline}
+.essay[hidden]{display:none}
+.lang-tag{padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--muted);font:11px var(--mono)}
+.chapter .gloss{margin:8px 0 0;font:400 15px/1.55 var(--sans);color:var(--ink-2)}
+.chapter .gloss span{color:var(--accent-ink);font:12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.chapter h3 .orig{font-weight:400;color:var(--muted)}
+.chapter .ep .soon{cursor:help}
+@media (max-width:760px){.pillars{grid-template-columns:1fr}.essay{grid-template-columns:1fr auto;grid-template-areas:"t t" "a l"}.essay time{grid-area:t}.essay a{grid-area:a}.essay .lang-tag{grid-area:l}}
+.photo-fig{margin:18px 0 0}
+.photo-fig img{display:block;width:100%;height:auto;border-radius:var(--radius);box-shadow:0 18px 44px -28px rgba(10,34,31,.5)}
+.photo-fig figcaption{margin-top:8px;color:var(--muted);font:12px/1.4 var(--mono)}
+.photo-fig.wide{max-width:620px}
+.hero.with-photo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:44px;align-items:center}
+.hero.with-photo .photo-fig{margin:0}
+.hero.with-photo .photo-fig img{max-height:460px;object-fit:cover}
+@media (max-width:760px){.hero.with-photo{grid-template-columns:1fr;gap:24px}}

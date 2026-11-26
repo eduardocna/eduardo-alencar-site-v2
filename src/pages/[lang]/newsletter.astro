@@ -1,5 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { misc } from '../../data/content';
+import { withBase } from '../../data/paths';
+import InterestBlock from '../../components/InterestBlock.astro';
 import { newsletter as copy } from '../../data/content';
 import { fullLocales, substackUrl, substackHome, linkedinNewsletter, ui, type FullLocale } from '../../data/site';
 import { fmtDate } from '../../data/text';
@@ -7,16 +10,20 @@ import feed from '../../data/feed.json';
 export function getStaticPaths() { return fullLocales.map((lang) => ({ params: { lang } })); }
 const lang = Astro.params.lang as FullLocale;
 const c = copy[lang];
-const editions = feed.itens.filter((item) => item.canal === 'newsletter' && item.idioma === lang && item.url).slice(0, 8);
+const feedLang = lang === 'pt' ? 'pt' : 'en';
+const editions = feed.itens.filter((item) => item.canal === 'newsletter' && item.idioma === feedLang && item.url).slice(0, 8);
 ---
 <Base title={c.title} description={c.description} lang={lang} room="newsletter/" showSubscribe={false}>
   <div class="wrap">
-    <header class="hero">
+    <header class="hero with-photo">
+      <div>
       <p class="eyebrow">{c.eyebrow}</p>
       <h1 class="page-title">{c.heading}</h1>
       <p class="lede">{c.lede}</p>
       <div class="actions"><a class="btn" href={substackUrl} data-goatcounter-click="assinar-newsletter">{ui[lang].subscribe}</a></div>
       <p class="muted small">{c.free}</p>
+      </div>
+      <figure class="photo-fig"><img src={withBase('images/newsletter-autografo.webp')} alt={misc[lang].photoSigning} width="960" height="1200" loading="lazy" /><figcaption>{misc[lang].photoSigning}</figcaption></figure>
     </header>
     <section class="two-col">
       <div>
@@ -37,6 +44,7 @@ const editions = feed.itens.filter((item) => item.canal === 'newsletter' && item
         <p class="small"><a href={substackHome}>{c.readAll}</a></p>
       </section>
     )}
+    <InterestBlock lang={lang} />
     <section class="subscribe-inline">
       <p>{c.linkedin}</p>
       <a class="btn ghost small" href={linkedinNewsletter}>{c.linkedinCta}</a>
