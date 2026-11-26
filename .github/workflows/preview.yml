@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PUBLIC_PREVIEW: 'true'
+      PUBLIC_GOATCOUNTER: eduardocnalencar
       SITE_URL: https://eduardocna.github.io
       BASE_PATH: /eduardo-alencar-site-v2/
     steps:
